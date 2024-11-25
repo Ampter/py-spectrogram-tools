@@ -174,6 +174,7 @@ pst.print_folder_size(session_folder)
 
 Contrributing:
 You are free to contribute
+If i ever needed to maintain this project, i can`t because i don`t have enough time, but i will check on it from time to time.
 
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
