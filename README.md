@@ -146,26 +146,6 @@ Example:
 pst.print_folder_size()
 ```
 
-```python
-audio_data = pst.record_audio()
-session_folder = pst.get_last_session_folder()
-pst.plot_and_save_spectrogram(audio_data=audio_data, session_folder=session_folder, RATE=44100)
-```
-Plots and saves the spectrogram. 
-Parameters:
-audio_data: required; it`s the audio data
-session_folder: required; path to the session folder
-RATE: sampling rate; default is 44100
-
-```python
-pst.record_plot_and_save_spectrogram(session_folder=session_1, rate=44100, channels=1, duration=3)
-```
-Records, plots and saves the spectrogram. 
-Parameters:
-session_folder: requierd; the session folder to save to.
-rate: opltional; sampling rate, default is 44100
-channels: optional; the number of channels, default is 1
-duration: optional; the duration of recording, default is 3 (in seconds)
 
 Platform Support
 The library automatically selects the default directory based on your operating system:
