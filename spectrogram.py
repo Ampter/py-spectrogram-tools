@@ -147,33 +147,3 @@ def print_folder_size(directory=None):
 
     total_size = get_folder_size(latest_session_folder)
     print(f"Total size of folder {latest_session_folder}: {total_size / (1024 * 1024):.2f} MB")
-
-
-def plot_and_save_spectrogram(audio_data, session_folder, rate=44100):
-    """Creates and saves a spectrogram, requires audio data, rate, and the session folder."""
-    fig, ax = plt.subplots()
-    ax.set_title('Spectrogram')
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('Frequency (Hz)')
-    ax.specgram(audio_data, NFFT=256, Fs=rate, noverlap=128)
-    timestamp = time.ctime().replace(' ', '_').replace(':', '-')
-    filename = os.path.join(session_folder, f'spectrogram_{timestamp}.png')
-    plt.savefig(filename)
-    plt.close(fig)
-    return filename
-
-
-def record_plot_and_save_spectrogram(session_folder, rate=44100, channels=1, duration=3):
-    """Records audio, plots a spectrogram, and saves it to the session folder."""
-    audio_data = sd.rec(int(rate * duration), samplerate=rate, channels=channels)
-    sd.wait()
-    fig, ax = plt.subplots()
-    ax.set_title('Spectrogram')
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('Frequency (Hz)')
-    ax.specgram(audio_data, NFFT=256, Fs=rate, noverlap=128)
-    timestamp = time.ctime().replace(' ', '_').replace(':', '-')
-    filename = os.path.join(session_folder, f'spectrogram_{timestamp}.png')
-    plt.savefig(filename)
-    plt.close(fig)
-    print(f"Spectrogram saved to {filename}")
