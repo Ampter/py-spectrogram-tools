@@ -27,7 +27,7 @@ platform (comes with Python)
 
 The recommended way to import is:
 ```python
-import py-spectrogram-tools as pst
+import pyspectools as pst
 ```
 
 Functions
