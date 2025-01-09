@@ -17,6 +17,8 @@ pip install py-spectrogram-tools
 or using git:
 ```bash
 git clone https://github.com/Ampter/py-spectrogram-tools
+python setup.py sdist bdist_wheel
+pip install .
 ```
 Dependencies:
 numpy
