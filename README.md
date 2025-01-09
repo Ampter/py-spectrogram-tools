@@ -165,17 +165,11 @@ import py-spectrogram-tools as pst
 # Record audio
 audio_data = pst.record_audio(duration=5)
 
-# Create a new session folder
-session_folder = pst.create_session_folder()
+spectrogram = pst.plot_spectrogramm(audio_data)
 
-# Generate a spectrogram for the recorded audio
-fig, ax = pst.plot_spectrogram(audio_data)
+session_folder = get_default_directory()
 
-# Save the spectrogram image to the session folder
-pst.save_spectrogram(fig, session_folder)
-
-# Print the size of the session folder
-pst.print_folder_size(session_folder)
+save_spectrogram(spectrogram, session_folder)
 ```
 
 Contrributing:
