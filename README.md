@@ -55,6 +55,7 @@ Example:
 ```python
 session_folder = pst.create_session_folder()
 print(f"Session created at {session_folder}")
+```
 
 ```python
 pst.get_latest_session_folder(directory=None)
