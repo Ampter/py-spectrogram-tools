@@ -1,0 +1,69 @@
+name: Create Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main, master]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  create-release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Read package version from setup.py
+        id: package_version
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          setup_py = Path("setup.py").read_text(encoding="utf-8")
+          match = re.search(r'version\s*=\s*["\']([^"\']+)["\']', setup_py)
+          if not match:
+              raise SystemExit("Could not find version in setup.py")
+
+          version = match.group(1)
+          output_path = os.environ.get("GITHUB_OUTPUT")
+          if not output_path:
+              raise SystemExit("GITHUB_OUTPUT is not set")
+
+          with open(output_path, "a", encoding="utf-8") as fh:
+              fh.write(f"version={version}\n")
+              fh.write(f"tag=v{version}\n")
+          PY
+
+      - name: Skip release if tag already exists
+        id: tag_check
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/${{ steps.package_version.outputs.tag }}" > /dev/null 2>&1; then
+            echo "create_release=false" >> "$GITHUB_OUTPUT"
+            echo "Tag already exists; skipping release creation."
+          else
+            echo "create_release=true" >> "$GITHUB_OUTPUT"
+            echo "Tag does not exist; release will be created."
+          fi
+
+      - name: Create GitHub release
+        if: steps.tag_check.outputs.create_release == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.package_version.outputs.tag }}
+          name: ${{ steps.package_version.outputs.tag }}
+          target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
+          generate_release_notes: true
+          body: |
+            Automated release created after merging PR #${{ github.event.pull_request.number }}.
