@@ -1,4 +1,0 @@
-sounddevice
-matplotlib
-setuptools
-wheel
