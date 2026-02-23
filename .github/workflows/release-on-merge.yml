@@ -57,10 +57,20 @@ jobs:
             echo "Tag does not exist; release will be created."
           fi
 
+      - name: Ensure release token is configured
+        if: steps.tag_check.outputs.create_release == 'true'
+        run: |
+          if [ -z "${{ secrets.RELEASE_TOKEN }}" ]; then
+            echo "RELEASE_TOKEN secret is required."
+            echo "Use a PAT (repo scope) so the created release triggers the release workflow."
+            exit 1
+          fi
+
       - name: Create GitHub release
         if: steps.tag_check.outputs.create_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.RELEASE_TOKEN }}
           tag_name: ${{ steps.package_version.outputs.tag }}
           name: ${{ steps.package_version.outputs.tag }}
           target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
