@@ -1,179 +1,91 @@
-Spectrogram Recorder Library
-A Python library for recording audio, generating spectrograms, and managing session data. This library helps you capture audio, visualize it as spectrograms, save those images, and organize them into session folders. It also offers utilities to manage and delete session folders and calculate their sizes.
+# Spectrogram Recorder Library
 
-Features
-Audio Recording: Record audio data using the sounddevice library.
-Spectrogram Generation: Plot spectrograms from recorded audio.
-Session Management: Create and manage folders for each recording session.
-Cross-platform Support: Compatible with Windows, macOS, and Linux.
-Directory Management: Automatically selects default directories based on the OS.
-File Size Calculation: Calculate and print the size of directories and session folders.
+A Python library for recording audio, generating spectrograms, and managing session data.
 
-Installation:
-You can install using pip:
+## Features
+
+- Record audio from your default input device (`sounddevice`).
+- Plot and save spectrograms (`matplotlib`).
+- Create numbered session folders (`session_1`, `session_2`, ...).
+- Delete the latest session and inspect folder sizes.
+- Cross-platform default save location based on the current user's home directory.
+
+## Installation
+
 ```bash
 pip install py-spectrogram-tools
 ```
-or using git:
+
+Or from source:
+
 ```bash
 git clone https://github.com/Ampter/py-spectrogram-tools
-cd pyspectools
-python setup.py sdist bdist_wheel
+cd py-spectrogram-tools
 pip install .
 ```
-Dependencies:
-numpy
-sounddevice
-matplotlib
-shutil (comes with Python)
-platform (comes with Python)
 
-The recommended way to import is:
+## Dependencies
+
+- numpy
+- sounddevice
+- matplotlib
+
+## Import
+
 ```python
 import pyspectools as pst
 ```
 
-Functions
-```python
-pst.get_default_directory()
-```
-Returns the default directory for saving spectrograms based on the current operating system.
+## API
 
-Example:
-```python
-default_directory = pst.get_default_directory()
-print(default_directory)
-pst.create_session_folder(directory=None)
-```
-Creates a new session folder inside the provided directory (or default directory if None). The folder is named with a unique session number.
+### `pst.get_default_directory()`
+Returns the default directory for spectrogram sessions:
 
-Parameters:
-directory: Optional; path to the directory where session folders will be created.
-Returns:
-The path to the newly created session folder.
-Example:
-```python
-session_folder = pst.create_session_folder()
-print(f"Session created at {session_folder}")
-```
+- Windows: `C:\Users\<username>\SOUNDS\spectrograms`
+- macOS: `/Users/<username>/SOUNDS/spectrograms`
+- Linux: `/home/<username>/SOUNDS/spectrograms`
 
-```python
-pst.get_latest_session_folder(directory=None)
-```
-Finds the session folder with the highest number and returns its path.
+### `pst.create_session_folder(directory=None)`
+Creates a new folder such as `session_5` and returns its path.
 
-Parameters:
-directory: Optional; path to the directory where session folders are stored.
-Returns:
-The path to the latest session folder, or None if no sessions exist.
-Example:
-```python
-latest_session = pst.get_latest_session_folder()
-print(f"Latest session folder: {latest_session}")
-```
+### `pst.get_latest_session_folder(directory=None)`
+Returns the highest numbered session folder path, or `None`.
 
-```python
-pst.plot_spectrogram(audio_data, rate=44100)
-```
-Generates and plots a spectrogram for the given audio data.
+### `pst.record_audio(duration=3, rate=44100, channels=1)`
+Records audio and returns a flattened NumPy array.
 
-Parameters:
-audio_data: Audio data to generate the spectrogram.
-rate: Sampling rate (default is 44100).
-Returns:
-fig: Matplotlib figure object.
-ax: Matplotlib axis object.
-Example:
-```python
-audio_data = np.random.randn(44100 * 3)  # Simulate 3 seconds of audio
-fig, ax = pst.plot_spectrogram(audio_data)
-plt.show()
-pst.save_spectrogram(fig, session_folder)
-```
-Saves the spectrogram figure to the session folder with a timestamped filename.
+### `pst.plot_spectrogram(audio_data, rate=44100)`
+Returns `(fig, ax)` for the generated spectrogram.
 
-Parameters:
-fig: The Matplotlib figure object to save.
-session_folder: The path to the session folder where the figure will be saved.
-Returns:
-The filename of the saved spectrogram.
-Example:
-```python
-pst.save_spectrogram(fig, session_folder)
-pst.record_audio(duration=3, rate=44100, channels=1)
-```
-Records audio for a specified duration and returns the audio data.
+### `pst.save_spectrogram(fig, session_folder)`
+Saves a PNG in the target session folder and returns the output file path.
 
-
-Parameters:
-duration: Duration of the recording in seconds (default is 3 seconds).
-rate: Sampling rate (default is 44100).
-channels: Number of audio channels (default is 1).
-Returns:
-audio_data: A numpy array containing the recorded audio data.
-Example:
-```python
-audio_data = pst.record_audio()
-pst.delete_latest_session_folder(directory=None)
-```
+### `pst.delete_latest_session_folder(directory=None)`
 Deletes the latest session folder.
 
-Parameters:
-directory: Optional; path to the directory where session folders are stored.
-Example:
-```python
-pst.delete_latest_session_folder()
-```
+### `pst.get_folder_size(directory=None)`
+Returns folder size in bytes.
 
-```python
-pst.get_folder_size(directory=None)
-```
-Calculates the total size of a directory by summing the sizes of all files inside it.
-
-
-Parameters:
-directory: Optional; path to the directory whose size will be calculated.
-Returns:
-Total size of the directory in bytes.
-Example:
-```python
-folder_size = pst.get_folder_size(session_folder)
-print(f"Folder size: {folder_size / (1024 * 1024):.2f} MB")
-pst.print_folder_size(directory=None)
-```
+### `pst.print_folder_size(directory=None)`
 Prints the total size of the latest session folder.
 
-Parameters:
-directory: Optional; path to the directory where session folders are stored.
-Example:
+## Usage Example
+
 ```python
-pst.print_folder_size()
-```
+import pyspectools as pst
 
-
-Platform Support
-The library automatically selects the default directory based on your operating system:
-
-Windows: C:\Users\<username>\SOUNDS\spectrograms
-macOS: /Users/<username>/SOUNDS/spectrograms
-Linux: /home/<username>/SOUNDS/spectrograms
-
-
-Usage Example:
-```python
-import py-spectrogram-tools as pst
-# Record audio
+session_folder = pst.create_session_folder()
 audio_data = pst.record_audio(duration=5)
+fig, _ = pst.plot_spectrogram(audio_data)
+output_file = pst.save_spectrogram(fig, session_folder)
 
-spectrogram = pst.plot_spectrogramm(audio_data)
-
-session_folder = get_default_directory()
-
-save_spectrogram(spectrogram, session_folder)
+print(f"Saved spectrogram: {output_file}")
 ```
 
-Contrributing:
-You are free to contribute
+## Contributing
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+Contributions are welcome.
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE` for details.
