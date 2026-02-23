@@ -25,4 +25,3 @@ __all__ = [
     "record_audio",
     "save_spectrogram",
 ]
-
