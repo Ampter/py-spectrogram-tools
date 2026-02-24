@@ -1,4 +1,3 @@
-from pyspectools2 import spectrogram
 import sys
 import tempfile
 import types
@@ -19,6 +18,8 @@ fake_sounddevice = types.ModuleType("sounddevice")
 fake_sounddevice.rec = lambda *args, **kwargs: []
 fake_sounddevice.wait = lambda: None
 sys.modules.setdefault("sounddevice", fake_sounddevice)
+
+from pyspectools2 import spectrogram  # noqa: E402
 
 
 class TestDefaultDirectory(unittest.TestCase):
