@@ -1,4 +1,3 @@
-from pyspectools2 import spectrogram
 import sys
 import tempfile
 import types
@@ -20,22 +19,24 @@ fake_sounddevice.rec = lambda *args, **kwargs: []
 fake_sounddevice.wait = lambda: None
 sys.modules.setdefault("sounddevice", fake_sounddevice)
 
+from pyspectools2 import spectrogram  # noqa: E402
+
 
 class TestDefaultDirectory(unittest.TestCase):
-    @mock.patch("pyspectools.spectrogram.Path.home", return_value=Path("/tmp/userhome"))
-    @mock.patch("pyspectools.spectrogram.platform.system", return_value="Linux")
+    @mock.patch("pyspectools2.spectrogram.Path.home", return_value=Path("/tmp/userhome"))
+    @mock.patch("pyspectools2.spectrogram.platform.system", return_value="Linux")
     def test_default_directory_linux(self, *_):
         directory = spectrogram.get_default_directory()
         self.assertEqual(directory, "/tmp/userhome/SOUNDS/spectrograms")
 
-    @mock.patch("pyspectools.spectrogram.Path.home", return_value=Path("C:/Users/tester"))
-    @mock.patch("pyspectools.spectrogram.platform.system", return_value="Windows")
+    @mock.patch("pyspectools2.spectrogram.Path.home", return_value=Path("C:/Users/tester"))
+    @mock.patch("pyspectools2.spectrogram.platform.system", return_value="Windows")
     def test_default_directory_windows(self, *_):
         directory = spectrogram.get_default_directory()
         self.assertEqual(directory, "C:/Users/tester/SOUNDS/spectrograms")
 
-    @mock.patch("pyspectools.spectrogram.Path.home", return_value=Path("/Users/tester"))
-    @mock.patch("pyspectools.spectrogram.platform.system", return_value="Darwin")
+    @mock.patch("pyspectools2.spectrogram.Path.home", return_value=Path("/Users/tester"))
+    @mock.patch("pyspectools2.spectrogram.platform.system", return_value="Darwin")
     def test_default_directory_macos(self, *_):
         directory = spectrogram.get_default_directory()
         self.assertEqual(directory, "/Users/tester/SOUNDS/spectrograms")

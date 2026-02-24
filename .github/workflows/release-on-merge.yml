@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Read package version from setup.py
+      - name: Read package version
         id: package_version
         run: |
           python - <<'PY'
@@ -31,10 +31,10 @@ jobs:
           import re
           from pathlib import Path
 
-          setup_py = Path("setup.py").read_text(encoding="utf-8")
-          match = re.search(r'version\s*=\s*["\']([^"\']+)["\']', setup_py)
+          init_py = Path("pyspectools2/__init__.py").read_text(encoding="utf-8")
+          match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', init_py)
           if not match:
-              raise SystemExit("Could not find version in setup.py")
+              raise SystemExit("Could not find version in pyspectools2/__init__.py")
 
           version = match.group(1)
           output_path = os.environ.get("GITHUB_OUTPUT")
