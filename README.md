@@ -13,14 +13,14 @@ A Python library for recording audio, generating spectrograms, and managing sess
 ## Installation
 
 ```bash
-pip install py-spectrogram-tools
+pip install pyspectools2
 ```
 
 Or from source:
 
 ```bash
-git clone https://github.com/Ampter/py-spectrogram-tools
-cd py-spectrogram-tools
+git clone https://github.com/Ampter/pyspectools2
+cd pyspectools2
 pip install .
 ```
 
