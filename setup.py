@@ -6,7 +6,7 @@ README = Path("README.md").read_text(encoding="utf-8")
 
 setup(
     name="pyspectools2",
-    version="1.0.0",
+    version="1.1.0",
     description="A library for recording and plotting spectrograms from audio data.",
     long_description=README,
     long_description_content_type="text/markdown",
