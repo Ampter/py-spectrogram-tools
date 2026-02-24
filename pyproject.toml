@@ -7,7 +7,7 @@ name = "pyspectools2"
 dynamic = ["version"]
 description = "A library for recording and plotting spectrograms from audio data."
 readme = "README.md"
-license = "LICENSE"
+license = "MIT"
 requires-python = ">=3.10"
 authors = [
     { name = "Sviatoslav Z.", email = "slawekzhukovski@gmail.com" },
