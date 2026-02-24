@@ -31,6 +31,7 @@ jobs:
           import re
           from pathlib import Path
 
+          # Reading version from __init__.py as the single source of truth
           init_py = Path("pyspectools2/__init__.py").read_text(encoding="utf-8")
           match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', init_py)
           if not match:
@@ -57,20 +58,14 @@ jobs:
             echo "Tag does not exist; release will be created."
           fi
 
-      - name: Ensure release token is configured
-        if: steps.tag_check.outputs.create_release == 'true'
-        run: |
-          if [ -z "${{ secrets.RELEASE_TOKEN }}" ]; then
-            echo "RELEASE_TOKEN secret is required."
-            echo "Use a PAT (repo scope) so the created release triggers the release workflow."
-            exit 1
-          fi
-
       - name: Create GitHub release
         if: steps.tag_check.outputs.create_release == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          token: ${{ secrets.RELEASE_TOKEN }}
+          # Using GITHUB_TOKEN for out-of-the-box functionality.
+          # Note: GITHUB_TOKEN will not trigger other workflows (like pypi-publish if it were on release event).
+          # Since pypi-publish.yml is also triggered on PR merge, this is acceptable.
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ steps.package_version.outputs.tag }}
           name: ${{ steps.package_version.outputs.tag }}
           target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
