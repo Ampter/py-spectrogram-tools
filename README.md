@@ -33,7 +33,7 @@ pip install .
 ## Import
 
 ```python
-import pyspectools as pst
+import pyspectools2 as pst
 ```
 
 ## API
@@ -72,7 +72,7 @@ Prints the total size of the latest session folder.
 ## Usage Example
 
 ```python
-import pyspectools as pst
+import pyspectools2 as pst
 
 session_folder = pst.create_session_folder()
 audio_data = pst.record_audio(duration=5)
