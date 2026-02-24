@@ -1,3 +1,4 @@
+from pyspectools2 import spectrogram
 import sys
 import tempfile
 import types
@@ -18,8 +19,6 @@ fake_sounddevice = types.ModuleType("sounddevice")
 fake_sounddevice.rec = lambda *args, **kwargs: []
 fake_sounddevice.wait = lambda: None
 sys.modules.setdefault("sounddevice", fake_sounddevice)
-
-from pyspectools import spectrogram
 
 
 class TestDefaultDirectory(unittest.TestCase):
@@ -47,7 +46,8 @@ class TestSessionManagement(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             Path(temp_dir, "session_1").mkdir()
             Path(temp_dir, "session_bad").mkdir()
-            Path(temp_dir, "notes.txt").write_text("not a session", encoding="utf-8")
+            Path(temp_dir, "notes.txt").write_text(
+                "not a session", encoding="utf-8")
 
             created = spectrogram.create_session_folder(temp_dir)
 

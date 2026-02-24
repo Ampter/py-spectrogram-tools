@@ -93,7 +93,8 @@ def save_spectrogram(fig, session_folder) -> str:
 def record_audio(duration=3, rate=44100, channels=1):
     """Record audio data and return it as a flattened array."""
     print("Starting recording...")
-    audio_data = sd.rec(int(rate * duration), samplerate=rate, channels=channels)
+    audio_data = sd.rec(int(rate * duration),
+                        samplerate=rate, channels=channels)
     sd.wait()
     print("Recording finished.")
     return audio_data.flatten()
