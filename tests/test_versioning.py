@@ -1,3 +1,4 @@
+from bump_version import bump_version
 import sys
 import os
 from pathlib import Path
@@ -6,7 +7,6 @@ from pathlib import Path
 scripts_dir = Path(__file__).parent.parent / "scripts"
 sys.path.append(str(scripts_dir))
 
-from bump_version import bump_version
 
 def test_bump_logic():
     test_cases = [
@@ -21,6 +21,7 @@ def test_bump_logic():
     for current, expected in test_cases:
         actual = bump_version(current)
         assert actual == expected, f"Failed: {current} -> {actual} (expected {expected})"
+
 
 if __name__ == "__main__":
     test_bump_logic()

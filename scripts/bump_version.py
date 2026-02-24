@@ -2,6 +2,7 @@ import re
 import os
 from pathlib import Path
 
+
 def bump_version(version_str):
     major, minor, patch = map(int, version_str.split('.'))
     if patch < 9:
@@ -15,13 +16,15 @@ def bump_version(version_str):
         patch = 0
     return f"{major}.{minor}.{patch}"
 
+
 def main():
     init_file = Path("pyspectools2/__init__.py")
     content = init_file.read_text(encoding="utf-8")
 
     match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
     if not match:
-        raise ValueError("Could not find __version__ in pyspectools2/__init__.py")
+        raise ValueError(
+            "Could not find __version__ in pyspectools2/__init__.py")
 
     current_version = match.group(1)
     new_version = bump_version(current_version)
@@ -39,6 +42,7 @@ def main():
     if github_output:
         with open(github_output, "a") as f:
             f.write(f"new_version={new_version}\n")
+
 
 if __name__ == "__main__":
     main()
