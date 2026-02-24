@@ -5,14 +5,10 @@ from pathlib import Path
 # Add scripts directory to sys.path
 scripts_dir = Path(__file__).parent.parent / "scripts"
 sys.path.append(str(scripts_dir))
-<<<<<<< HEAD
 
 # Import bump_version.py
-
-
-=======
 from bump_version import bump_version
->>>>>>> bd200d4 (Revert "Auto-format Python code with autopep8")
+
 def test_bump_logic():
     test_cases = [
         ("1.0.0", "1.0.1"),
