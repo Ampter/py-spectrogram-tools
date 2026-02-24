@@ -25,9 +25,9 @@ dependencies = [
 
 [tool.hatch.version]
 source = "vcs"
-path = "pyspectools/__init__.py"
+path = "pyspectools2/__init__.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "/pyspectools",
+    "/pyspectools2",
 ]
