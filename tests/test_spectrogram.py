@@ -19,7 +19,7 @@ fake_sounddevice.rec = lambda *args, **kwargs: []
 fake_sounddevice.wait = lambda: None
 sys.modules.setdefault("sounddevice", fake_sounddevice)
 
-from pyspectools import spectrogram
+from pyspectools2 import spectrogram
 
 
 class TestDefaultDirectory(unittest.TestCase):
