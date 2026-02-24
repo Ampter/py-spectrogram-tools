@@ -144,5 +144,3 @@ def print_folder_size(directory=None):
     print(
         f"Total size of folder {latest_session_folder}: {total_size / (1024 * 1024):.2f} MB"
     )
-
-
