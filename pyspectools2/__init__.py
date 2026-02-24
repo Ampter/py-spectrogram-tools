@@ -1,6 +1,6 @@
 """Public package API for py-spectrogram-tools."""
 
-__version__ = "1.0.4"
+__version__ = "1.1.9"
 
 from .spectrogram import (
     create_session_folder,
