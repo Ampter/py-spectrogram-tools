@@ -1,11 +1,13 @@
-from bump_version import bump_version
 import sys
 import os
 from pathlib import Path
+
 # Add scripts directory to sys.path
 scripts_dir = Path(__file__).parent.parent / "scripts"
 sys.path.append(str(scripts_dir))
 
+# Import bump_version.py
+from bump_version import bump_version
 
 def test_bump_logic():
     test_cases = [
