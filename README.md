@@ -4,7 +4,7 @@
 
 ## Who this is for
 
-This package is useful if you want a lightweight workflow to:
+This package is useful if you want a lightweight way to:
 - record short audio clips from a microphone,
 - visualize them as spectrograms,
 - save outputs into incremental session folders.
@@ -114,17 +114,17 @@ pytest
 ```
 
 Test layout:
-- `tests/test_spectrogram.py`: behavior of the public spectrogram API.
+- `tests/test_spectrogram.py`: behavior of the library.
 - `tests/test_versioning.py`: release version bump rules.
 - `tests/test_packaging_metadata.py`: packaging/version source-of-truth checks.
 
-## Versioning policy
+## Examples
 
-Package version comes from `pyspectools2/__init__.py` (`__version__`).
-The release bump logic follows `scripts/bump_version.py`:
-- increment patch until `.9`,
-- then increment minor until `.1`,
-- then increment major and reset to `.0.0`.
+You can find examples at /examples, there are 3 of them:
+
+- `examples/record_duration.py` : Records and saves for a specified duration.
+- `examples/record_duration.py` : Infinitley records and saves.
+- `examples/basic_workflow.py` : Basic script, same as in quickstart.
 
 ## Contributing
 
