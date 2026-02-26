@@ -6,7 +6,7 @@ import pytest
 SCRIPTS_DIR = Path(__file__).parent.parent / "scripts"
 sys.path.append(str(SCRIPTS_DIR))
 
-from bump_version import bump_version  # noqa: E402
+from bump_version import bump_version
 
 
 @pytest.mark.parametrize(
