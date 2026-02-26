@@ -37,7 +37,7 @@ pip install .
 - A working audio input device and backend supported by `sounddevice`
 - Optional display backend for interactive plotting (headless CI can still run tests with mocks)
 
-## Quickstart (2–3 minutes)
+## Quickstart
 
 ```python
 import pyspectools2 as pst
