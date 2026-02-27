@@ -37,5 +37,15 @@ __all__ = [
     "save_spectrogram",
     "load_wav",
     "load_and_plot_wav",
-    "load_wavs_from_directory"
+    "load_wavs_from_directory",
+    "plot_all_wavs",
+    "record_and_save_wav",
+    "play_wav",
+    "save_wav",
+    "normalize_audio",
+    "trim_silence",
+    "batch_process_wavs",
+    "get_wav_info",
+    "to_mono",
+    "to_stereo"
 ]
