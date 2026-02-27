@@ -12,6 +12,7 @@ from typing import Tuple, List, Dict, Optional
 
 _SESSION_PATTERN = re.compile(r"^session_(\d+)$")
 
+
 def load_wav(path: str) -> Tuple[np.ndarray, int]:
     """
     Load WAV file and return mono float32 numpy array + samplerate.
@@ -44,6 +45,7 @@ def load_wavs_from_directory(directory: str) -> Dict[str, Tuple[np.ndarray, int]
 
     return wavs
 
+
 def load_and_plot_wav(path, session=True):
     """
     Load a wav file, plot its spectrogram, and optionally save it to a session.
@@ -61,7 +63,7 @@ def load_and_plot_wav(path, session=True):
         return fig, ax, outfile
     else:
         return fig, ax
-    
+
 
 def get_default_directory() -> str:
     """Return the default directory based on the operating system."""
@@ -197,6 +199,7 @@ def print_folder_size(directory=None):
         f"Total size of folder {latest_session_folder}: {total_size / (1024 * 1024):.2f} MB"
     )
 
+
 def plot_all_wavs(directory: str, session: bool = True):
     """
     Load and plot all WAV files in a directory.
@@ -210,6 +213,7 @@ def plot_all_wavs(directory: str, session: bool = True):
             results.append((file, result))
 
     return results
+
 
 def record_and_save_wav(duration=3, rate=44100, channels=1, directory=None) -> str:
     """
@@ -230,6 +234,7 @@ def record_and_save_wav(duration=3, rate=44100, channels=1, directory=None) -> s
     print(f"Saved recording to: {filename}")
     return filename
 
+
 def play_wav(path: str):
     """
     Play a WAV file.
@@ -237,13 +242,15 @@ def play_wav(path: str):
     data, sr = load_wav(path)
     sd.play(data, sr)
     sd.wait()
-    
+
+
 def save_wav(path: str, audio_data: np.ndarray, samplerate: int):
     """
     Save numpy audio array to WAV file.
     """
     sf.write(path, audio_data, samplerate)
-    
+
+
 def normalize_audio(audio_data: np.ndarray) -> np.ndarray:
     """
     Normalize audio to range [-1, 1].
@@ -252,6 +259,7 @@ def normalize_audio(audio_data: np.ndarray) -> np.ndarray:
     if max_val == 0:
         return audio_data
     return audio_data / max_val
+
 
 def trim_silence(audio_data: np.ndarray, threshold=0.01) -> np.ndarray:
     """
@@ -264,6 +272,7 @@ def trim_silence(audio_data: np.ndarray, threshold=0.01) -> np.ndarray:
     start = np.argmax(mask)
     end = len(audio_data) - np.argmax(mask[::-1])
     return audio_data[start:end]
+
 
 def batch_process_wavs(directory: str):
     """
@@ -285,7 +294,8 @@ def batch_process_wavs(directory: str):
         outfile = save_spectrogram(fig, session_folder)
 
         print(f"Processed {file} -> {outfile}")
-        
+
+
 def get_wav_info(path: str) -> dict:
     """
     Return metadata about WAV file.
@@ -299,7 +309,8 @@ def get_wav_info(path: str) -> dict:
             "format": f.format,
             "subtype": f.subtype,
         }
-        
+
+
 def to_mono(audio_data: np.ndarray) -> np.ndarray:
     if audio_data.ndim == 2:
         return audio_data.mean(axis=1)
