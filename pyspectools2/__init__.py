@@ -12,6 +12,8 @@ from .spectrogram import (
     print_folder_size,
     record_audio,
     save_spectrogram,
+    load_wav,
+    load_and_plot_wav
 )
 
 __all__ = [
@@ -24,4 +26,6 @@ __all__ = [
     "print_folder_size",
     "record_audio",
     "save_spectrogram",
+    "load_wav",
+    "load_and_plot_wav"
 ]
