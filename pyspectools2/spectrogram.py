@@ -25,6 +25,8 @@ def load_wav(path: str) -> Tuple[np.ndarray, int]:
     # Convert stereo → mono if needed
     if data.ndim == 2 and data.shape[1] > 1:
         data = data.mean(axis=1)
+    elif data.ndim == 2 and data.shape[1] == 1:
+        data = data.flatten()
 
     return data, sr
 

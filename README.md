@@ -16,6 +16,8 @@ This package is useful if you want a lightweight way to:
 - Create numbered session folders (`session_1`, `session_2`, ...).
 - Delete the latest session and inspect folder sizes.
 - Use a cross-platform default save location based on your home directory.
+- Load, save, and process WAV files.
+- Audio utilities: normalization, trimming, mono/stereo conversion.
 
 ## Installation
 
@@ -85,6 +87,29 @@ Returns `(fig, ax)` for the generated spectrogram.
 #### `pst.save_spectrogram(fig, session_folder)`
 Saves a PNG in the target session folder and returns the output file path.
 
+### WAV and Audio processing
+
+#### `pst.load_wav(path)`
+Loads a WAV file and returns `(audio_data, samplerate)`.
+
+#### `pst.save_wav(path, audio_data, samplerate)`
+Saves a NumPy array to a WAV file.
+
+#### `pst.record_and_save_wav(duration=3, rate=44100, channels=1, directory=None)`
+Records audio and saves it as a WAV file in a new session folder.
+
+#### `pst.batch_process_wavs(directory)`
+Loads, normalizes, trims, and generates spectrograms for all WAV files in a directory.
+
+#### `pst.normalize_audio(audio_data)`
+Normalizes audio data to the range [-1, 1].
+
+#### `pst.trim_silence(audio_data, threshold=0.01)`
+Removes leading and trailing silence from audio data.
+
+#### `pst.to_mono(audio_data)` / `pst.to_stereo(audio_data)`
+Converts audio data between mono and stereo formats.
+
 ### Storage utilities
 
 #### `pst.get_folder_size(directory=None)`
@@ -115,16 +140,20 @@ pytest
 
 Test layout:
 - `tests/test_spectrogram.py`: behavior of the library.
+- `tests/test_audio_processing.py`: tests for audio utility functions.
+- `tests/test_wav_io.py`: tests for WAV file input/output and processing.
 - `tests/test_versioning.py`: release version bump rules.
 - `tests/test_packaging_metadata.py`: packaging/version source-of-truth checks.
 
 ## Examples
 
-You can find examples at /examples, there are 3 of them:
+You can find examples in the `examples/` directory:
 
-- `examples/record_duration.py` : Records and saves for a specified duration.
-- `examples/record_duration.py` : Infinitley records and saves.
-- `examples/basic_workflow.py` : Basic script, same as in quickstart.
+- `examples/basic_workflow.py`: Basic script, same as in quickstart.
+- `examples/record_duration.py`: Records and saves for a specified duration.
+- `examples/record_infinite.py`: Infinitely records and saves spectrograms in a loop.
+- `examples/load_wav.py`: Shows how to load a WAV and plot its spectrogram.
+- `examples/batch_processing.py`: Demonstrates batch processing of multiple WAV files.
 
 ## Contributing
 
