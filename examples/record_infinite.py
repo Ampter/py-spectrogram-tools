@@ -2,6 +2,7 @@ import pyspectools2 as pst
 import sys
 import time
 
+
 def main():
     print("Infinite recording mode started. Press Ctrl+C to stop.")
     try:
@@ -22,6 +23,7 @@ def main():
         print("\nStopping infinite recording...")
         pst.print_folder_size()
         sys.exit(0)
+
 
 if __name__ == '__main__':
     main()

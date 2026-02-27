@@ -1,3 +1,7 @@
+from pyspectools2 import (
+    load_wav, save_wav, get_wav_info,
+    load_wavs_from_directory, batch_process_wavs
+)
 import sys
 import types
 import os
@@ -21,10 +25,6 @@ fake_sounddevice.rec = lambda *args, **kwargs: []
 fake_sounddevice.wait = lambda: None
 sys.modules.setdefault("sounddevice", fake_sounddevice)
 
-from pyspectools2 import (
-    load_wav, save_wav, get_wav_info,
-    load_wavs_from_directory, batch_process_wavs
-)
 
 def test_save_and_load_wav():
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -39,6 +39,7 @@ def test_save_and_load_wav():
         assert loaded_sr == sr
         assert np.allclose(data, loaded_data, atol=1e-4)
 
+
 def test_get_wav_info():
     with tempfile.TemporaryDirectory() as temp_dir:
         path = os.path.join(temp_dir, "test.wav")
@@ -51,6 +52,7 @@ def test_get_wav_info():
         assert info["frames"] == 2
         assert info["duration_sec"] == 2 / 16000
         assert info["channels"] == 1
+
 
 def test_load_wavs_from_directory():
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -65,6 +67,7 @@ def test_load_wavs_from_directory():
         assert len(wavs) == 2
         assert "one.wav" in wavs
         assert "two.wav" in wavs
+
 
 @mock.patch("pyspectools2.spectrogram.create_session_folder")
 @mock.patch("pyspectools2.spectrogram.save_spectrogram")

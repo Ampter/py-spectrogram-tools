@@ -3,6 +3,7 @@ import os
 import tempfile
 import numpy as np
 
+
 def main():
     # Create a temporary directory with some dummy WAV files for demonstration
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -21,6 +22,7 @@ def main():
         latest_session = pst.get_latest_session_folder()
         print(f"Batch processing complete. Results saved in: {latest_session}")
         pst.print_folder_size()
+
 
 if __name__ == "__main__":
     main()
