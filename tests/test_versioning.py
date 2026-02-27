@@ -1,12 +1,7 @@
-from bump_version import bump_version
+from pyspectools2.scripts.bump_version import bump_version
 import sys
 from pathlib import Path
-
 import pytest
-
-SCRIPTS_DIR = Path(__file__).parent.parent / "scripts"
-sys.path.append(str(SCRIPTS_DIR))
-
 
 @pytest.mark.parametrize(
     "current, expected",
