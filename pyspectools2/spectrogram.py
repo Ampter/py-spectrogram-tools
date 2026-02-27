@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import sounddevice as sd
 import numpy as np
 import soundfile as sf
-from typing import Tuple
+from typing import Tuple, List, Dict, Optional
 
 _SESSION_PATTERN = re.compile(r"^session_(\d+)$")
 
@@ -26,6 +26,23 @@ def load_wav(path: str) -> Tuple[np.ndarray, int]:
         data = data.mean(axis=1)
 
     return data, sr
+
+
+def load_wavs_from_directory(directory: str) -> Dict[str, Tuple[np.ndarray, int]]:
+    """
+    Load all WAV files from a directory.
+
+    Returns:
+        dict mapping filename -> (audio_data, samplerate)
+    """
+    wavs: Dict[str, Tuple[np.ndarray, int]] = {}
+
+    for file in os.listdir(directory):
+        if file.lower().endswith(".wav"):
+            path = os.path.join(directory, file)
+            wavs[file] = load_wav(path)
+
+    return wavs
 
 def load_and_plot_wav(path, session=True):
     """
@@ -179,3 +196,117 @@ def print_folder_size(directory=None):
     print(
         f"Total size of folder {latest_session_folder}: {total_size / (1024 * 1024):.2f} MB"
     )
+
+def plot_all_wavs(directory: str, session: bool = True):
+    """
+    Load and plot all WAV files in a directory.
+    """
+    results = []
+
+    for file in os.listdir(directory):
+        if file.lower().endswith(".wav"):
+            path = os.path.join(directory, file)
+            result = load_and_plot_wav(path, session=session)
+            results.append((file, result))
+
+    return results
+
+def record_and_save_wav(duration=3, rate=44100, channels=1, directory=None) -> str:
+    """
+    Record audio and save as WAV file inside a new session folder.
+    """
+    if directory is None:
+        directory = get_default_directory()
+
+    session_folder = create_session_folder(directory)
+
+    audio_data = record_audio(duration=duration, rate=rate, channels=channels)
+
+    timestamp = time.ctime().replace(" ", "_").replace(":", "-")
+    filename = os.path.join(session_folder, f"recording_{timestamp}.wav")
+
+    sf.write(filename, audio_data, rate)
+
+    print(f"Saved recording to: {filename}")
+    return filename
+
+def play_wav(path: str):
+    """
+    Play a WAV file.
+    """
+    data, sr = load_wav(path)
+    sd.play(data, sr)
+    sd.wait()
+    
+def save_wav(path: str, audio_data: np.ndarray, samplerate: int):
+    """
+    Save numpy audio array to WAV file.
+    """
+    sf.write(path, audio_data, samplerate)
+    
+def normalize_audio(audio_data: np.ndarray) -> np.ndarray:
+    """
+    Normalize audio to range [-1, 1].
+    """
+    max_val = np.max(np.abs(audio_data))
+    if max_val == 0:
+        return audio_data
+    return audio_data / max_val
+
+def trim_silence(audio_data: np.ndarray, threshold=0.01) -> np.ndarray:
+    """
+    Remove leading and trailing silence.
+    """
+    mask = np.abs(audio_data) > threshold
+    if not np.any(mask):
+        return audio_data
+
+    start = np.argmax(mask)
+    end = len(audio_data) - np.argmax(mask[::-1])
+    return audio_data[start:end]
+
+def batch_process_wavs(directory: str):
+    """
+    Load, normalize, trim, plot, and save all WAV files in directory.
+    """
+    session_folder = create_session_folder()
+
+    for file in os.listdir(directory):
+        if not file.lower().endswith(".wav"):
+            continue
+
+        path = os.path.join(directory, file)
+        data, sr = load_wav(path)
+
+        data = normalize_audio(data)
+        data = trim_silence(data)
+
+        fig, ax = plot_spectrogram(data, rate=sr)
+        outfile = save_spectrogram(fig, session_folder)
+
+        print(f"Processed {file} -> {outfile}")
+        
+def get_wav_info(path: str) -> dict:
+    """
+    Return metadata about WAV file.
+    """
+    with sf.SoundFile(path) as f:
+        return {
+            "samplerate": f.samplerate,
+            "channels": f.channels,
+            "frames": f.frames,
+            "duration_sec": f.frames / f.samplerate,
+            "format": f.format,
+            "subtype": f.subtype,
+        }
+        
+def to_mono(audio_data: np.ndarray) -> np.ndarray:
+    if audio_data.ndim == 2:
+        return audio_data.mean(axis=1)
+    return audio_data
+
+
+def to_stereo(audio_data: np.ndarray) -> np.ndarray:
+    if audio_data.ndim == 1:
+        return np.column_stack([audio_data, audio_data])
+    return audio_data
