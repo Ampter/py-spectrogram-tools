@@ -36,7 +36,7 @@ jobs:
 
       - name: Bump version
         id: bump
-        run: python scripts/bump_version.py
+        run: python pyspectools2/scripts/bump_version.py
 
       - name: Commit and push version bump
         run: |
