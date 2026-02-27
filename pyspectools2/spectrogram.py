@@ -4,12 +4,47 @@ import re
 import shutil
 import time
 from pathlib import Path
-
 import matplotlib.pyplot as plt
 import sounddevice as sd
+import numpy as np
+import soundfile as sf
+from typing import Tuple
 
 _SESSION_PATTERN = re.compile(r"^session_(\d+)$")
 
+def load_wav(path: str) -> Tuple[np.ndarray, int]:
+    """
+    Load WAV file and return mono float32 numpy array + samplerate.
+    """
+
+    with sf.SoundFile(path) as f:
+        data: np.ndarray = f.read(dtype="float32", always_2d=True)
+        sr: int = f.samplerate
+
+    # Convert stereo → mono if needed
+    if data.ndim == 2 and data.shape[1] > 1:
+        data = data.mean(axis=1)
+
+    return data, sr
+
+def load_and_plot_wav(path, session=True):
+    """
+    Load a wav file, plot its spectrogram, and optionally save it to a session.
+    """
+    from . import plot_spectrogram, create_session_folder, save_spectrogram
+
+    data, sr = load_wav(path)  # get samples and sample rate
+
+    fig, ax = plot_spectrogram(data, rate=sr)
+
+    if session:
+        folder = create_session_folder()
+        outfile = save_spectrogram(fig, folder)
+        print(f"Saved spectrogram to: {outfile}")
+        return fig, ax, outfile
+    else:
+        return fig, ax
+    
 
 def get_default_directory() -> str:
     """Return the default directory based on the operating system."""
