@@ -1,3 +1,5 @@
+from pyspectools2 import spectrogram
+import pyspectools2
 import sys
 import types
 import os
@@ -28,8 +30,6 @@ fake_sounddevice.rec = lambda *args, **kwargs: []
 fake_sounddevice.wait = lambda: None
 sys.modules.setdefault("sounddevice", fake_sounddevice)
 
-import pyspectools2
-from pyspectools2 import spectrogram
 
 def test_save_and_load_wav():
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -42,6 +42,7 @@ def test_save_and_load_wav():
         assert loaded_sr == sr
         assert np.allclose(data, loaded_data, atol=1e-4)
 
+
 def test_get_wav_info():
     with tempfile.TemporaryDirectory() as temp_dir:
         path = os.path.join(temp_dir, "test.wav")
@@ -51,6 +52,7 @@ def test_get_wav_info():
         info = pyspectools2.get_wav_info(path)
         assert info["samplerate"] == 16000
 
+
 def test_load_wavs_from_directory():
     with tempfile.TemporaryDirectory() as temp_dir:
         sr = 16000
@@ -58,6 +60,7 @@ def test_load_wavs_from_directory():
         sf.write(os.path.join(temp_dir, "one.wav"), data, sr)
         wavs = pyspectools2.load_wavs_from_directory(temp_dir)
         assert len(wavs) == 1
+
 
 @mock.patch("pyspectools2.spectrogram.create_session_folder")
 @mock.patch("pyspectools2.spectrogram.plot_spectrogram")
@@ -74,7 +77,7 @@ def test_batch_process_wavs(mock_plot, mock_create):
         sf.write(os.path.join(temp_dir, "test.wav"), data, sr)
 
         # Setup Mock behavior
-        mock_create.return_value = temp_dir # Save PNGs in the temp dir
+        mock_create.return_value = temp_dir  # Save PNGs in the temp dir
 
         # Mock the Figure object and its savefig method
         mock_fig = mock.Mock()
