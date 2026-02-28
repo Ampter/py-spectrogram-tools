@@ -2,6 +2,8 @@ import pyspectools2 as pst
 import os
 import tempfile
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 
 
 def main():
