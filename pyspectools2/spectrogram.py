@@ -301,12 +301,14 @@ def batch_process_wavs(directory: str):
         path = os.path.join(directory, file)
         data, sr = load_wav(path)
         fig, ax = plot_spectrogram(data, rate=sr)
-        output_path = os.path.join(session_folder, f"{os.path.splitext(file)[0]}.png")
+        output_path = os.path.join(
+            session_folder, f"{os.path.splitext(file)[0]}.png")
         fig.savefig(output_path)
 
         fig.clear()
 
         print(f"Processed {file} -> {output_path}")
+
 
 def get_wav_info(path: str) -> dict:
     """
