@@ -1,3 +1,4 @@
+import pyspectools2 as pst
 import os
 import sys
 import types
@@ -32,9 +33,9 @@ fake_sd.play = mock.Mock()
 sys.modules.setdefault("sounddevice", fake_sd)
 
 # Now import the project after mocks are in place
-import pyspectools2 as pst
 
 # --- Tests ---
+
 
 def test_channel_conversions():
     """Verify mono <-> stereo transformations."""
@@ -52,6 +53,7 @@ def test_channel_conversions():
     # (0.1 + 0.3) / 2 = 0.2
     assert mono_out[0] == pytest.approx(0.2)
     assert mono_out[1] == pytest.approx(-0.3)
+
 
 def test_session_directory_logic():
     """Verify session folder creation, retrieval, and deletion."""
@@ -71,6 +73,7 @@ def test_session_directory_logic():
         assert not os.path.exists(s2)
         assert os.path.exists(s1)
 
+
 def test_folder_size_calculations():
     """Verify recursive folder size counting."""
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -86,6 +89,7 @@ def test_folder_size_calculations():
 
         assert pst.get_folder_size(tmp_dir) == 15
 
+
 @mock.patch("pyspectools2.spectrogram.sd.rec")
 def test_record_audio_logic(mock_rec):
     """Verify record_audio calls sounddevice correctly."""
@@ -99,6 +103,7 @@ def test_record_audio_logic(mock_rec):
 
     assert mock_rec.called
     assert len(audio) == sr * duration
+
 
 def test_load_and_plot_wav_wrapper():
     """Verify the high-level wrapper coordinates load and plot calls."""
@@ -122,6 +127,7 @@ def test_load_and_plot_wav_wrapper():
                         break
 
                 assert png_found, f"Expected a .png file to be saved in the temporary directory tree {tmp_dir}."
+
 
 @mock.patch("pyspectools2.spectrogram.sd.play")
 @mock.patch("pyspectools2.spectrogram.load_wav")
