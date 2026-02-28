@@ -4,6 +4,9 @@ import re
 import shutil
 import time
 from pathlib import Path
+import os
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import sounddevice as sd
 import numpy as np
@@ -127,13 +130,21 @@ def get_latest_session_folder(directory=None) -> str | None:
     return os.path.join(directory, f"session_{latest_session}")
 
 
-def plot_spectrogram(audio_data, rate=44100) -> tuple:
-    """Plot the spectrogram of the given audio data."""
-    fig, ax = plt.subplots()
-    ax.set_title("Spectrogram")
-    ax.set_xlabel("Time (s)")
-    ax.set_ylabel("Frequency (Hz)")
-    ax.specgram(audio_data, NFFT=256, Fs=rate, noverlap=128)
+def plot_spectrogram(data, rate=44100):
+    """
+    Creates a spectrogram using the OO interface. 
+    No GUI backends are initialized.
+    """
+
+    fig = Figure(figsize=(10, 6), dpi=100)
+    canvas = FigureCanvas(fig)
+    ax = fig.add_subplot(111)
+    Pxx, freqs, bins, im = ax.specgram(data, Fs=rate, cmap='viridis')
+
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Frequency (Hz)')
+    ax.set_title('Spectrogram')
+
     return fig, ax
 
 
@@ -280,6 +291,7 @@ def batch_process_wavs(directory: str):
     """
     Load, normalize, trim, plot, and save all WAV files in directory.
     """
+
     session_folder = create_session_folder()
 
     for file in os.listdir(directory):
@@ -288,15 +300,13 @@ def batch_process_wavs(directory: str):
 
         path = os.path.join(directory, file)
         data, sr = load_wav(path)
-
-        data = normalize_audio(data)
-        data = trim_silence(data)
-
         fig, ax = plot_spectrogram(data, rate=sr)
-        outfile = save_spectrogram(fig, session_folder)
+        output_path = os.path.join(session_folder, f"{os.path.splitext(file)[0]}.png")
+        fig.savefig(output_path)
 
-        print(f"Processed {file} -> {outfile}")
+        fig.clear()
 
+        print(f"Processed {file} -> {output_path}")
 
 def get_wav_info(path: str) -> dict:
     """
