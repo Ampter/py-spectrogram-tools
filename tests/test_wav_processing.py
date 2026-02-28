@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 import pyspectools2 as pst
 
+
 def test_normalize_audio():
     """
     Test that normalize_audio scales the peak amplitude to 1.0.
@@ -20,6 +21,7 @@ def test_normalize_audio():
     assert normalized[0] == -1.0
     assert normalized[2] == 0.4
 
+
 def test_normalize_audio_zero_input():
     """
     Test that normalize_audio handles an all-zero array without crashing.
@@ -27,6 +29,7 @@ def test_normalize_audio_zero_input():
     zeros = np.zeros(100, dtype=np.float32)
     normalized = pst.normalize_audio(zeros)
     assert np.array_equal(normalized, zeros)
+
 
 def test_trim_silence():
     """
@@ -37,12 +40,13 @@ def test_trim_silence():
     signal = np.ones(100)
     trailing_silence = np.zeros(50)
     audio_data = np.concatenate([leading_silence, signal, trailing_silence])
-    
+
     trimmed = pst.trim_silence(audio_data, threshold=0.1)
-    
+
     # Should be exactly the signal length
     assert len(trimmed) == 100
     assert np.all(trimmed == 1.0)
+
 
 def test_trim_silence_no_signal():
     """
@@ -52,6 +56,7 @@ def test_trim_silence_no_signal():
     trimmed = pst.trim_silence(silence, threshold=0.1)
     # Should return the original array if nothing exceeds threshold
     assert len(trimmed) == 100
+
 
 def test_wav_roundtrip():
     """
@@ -63,18 +68,19 @@ def test_wav_roundtrip():
         # Generate 0.1 seconds of a 440Hz sine wave
         t = np.linspace(0, 0.1, int(original_sr * 0.1))
         original_data = np.sin(2 * np.pi * 440 * t).astype(np.float32)
-        
+
         # Save
         pst.save_wav(file_path, original_data, original_sr)
         assert os.path.exists(file_path)
-        
+
         # Load
         loaded_data, loaded_sr = pst.load_wav(file_path)
-        
+
         # Verify metadata
         assert loaded_sr == original_sr
         # Verify data content (allow for small float epsilon from compression/format)
         assert np.allclose(original_data, loaded_data, atol=1e-4)
+
 
 def test_get_wav_info_integrity():
     """
@@ -83,9 +89,9 @@ def test_get_wav_info_integrity():
     with tempfile.TemporaryDirectory() as tmp_dir:
         file_path = os.path.join(tmp_dir, "info_test.wav")
         sr = 16000
-        data = np.zeros(16000, dtype=np.float32) # 1 second
+        data = np.zeros(16000, dtype=np.float32)  # 1 second
         pst.save_wav(file_path, data, sr)
-        
+
         info = pst.get_wav_info(file_path)
         assert info["samplerate"] == 16000
         assert info["duration_sec"] == 1.0
