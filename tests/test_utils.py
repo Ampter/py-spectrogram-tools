@@ -32,11 +32,6 @@ fake_sd.wait = mock.Mock()
 fake_sd.play = mock.Mock()
 sys.modules.setdefault("sounddevice", fake_sd)
 
-# Now import the project after mocks are in place
-
-# --- Tests ---
-
-
 def test_channel_conversions():
     """Verify mono <-> stereo transformations."""
     # Mono to Stereo
